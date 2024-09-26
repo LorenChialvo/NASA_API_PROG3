@@ -5,28 +5,117 @@
     <title>Astronomy Picture of the Day</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="../static/basecod.css">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .image-display {
+            flex: 1;
+            max-width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: contain;
+        }
+        .data-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 800px;
+            border: 3px solid black;
+            padding: 1rem;
+            border-radius: 15px;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            .image-display, .data-container {
+                width: 100%;
+            }
+        }
+        comment-form {
+            margin-top: 2rem;
+        }
+        .comments {
+            margin-top: 2rem;
+        }
+        .comment {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div class="body">
+    <div class="container">
         <h1>Astronomy Picture of the Day</h1>
         <form method="get" action="{% url 'apod' %}">
             <label for="date">Select Date:</label>
             <input type="date" id="date" name="date">
             <button type="submit">Get Picture</button>
         </form>
-    
-        {% if error %}
+        <div class="content-wrapper">
+            {% if error %}
             <p>Error: {{ error }}</p>
         {% elif apod_data %}
-            <h2>{{ apod_data.title }}</h2>
-            <p>Date: {{ apod_data.date }}</p>
-            <p>Image URL: {{ apod_data.url }}</p>
-            <img src="{{ apod_data.url }}" alt="{{ apod_data.title }}">
-            <p>{{ apod_data.explanation }}</p>
+            <img src="{{ apod_data.url }}" alt="{{ apod_data.title }}" class="image-display">   
+            <div class="data-container">
+                <h2>{{ apod_data.title }}</h2>
+                <p class="data-explanation">{{ apod_data.explanation }}</p>
+                <p>Date: {{ apod_data.date }}</p>
+            </div>
+            <div class="comment-form">
+                <h3>Add a Comment</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </form>
+            </div>
+            
+            <div class="comments">
+                <h3>Comments</h3>
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p><strong>{{ comment.author }}</strong> - {{ comment.created_at|date:"F d, Y H:i" }}</p>
+                        <p>{{ comment.text }}</p>
+                    </div>
+                {% empty %}
+                    <p>No comments yet.</p>
+                {% endfor %}
+            </div>
         {% else %}
             <p>No data available.</p>
         {% endif %}
-    
+            
+        </div>
+
     </div>
 </body>
 </html>
