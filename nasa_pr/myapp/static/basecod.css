@@ -1,0 +1,10 @@
+.body {
+    display: block;
+    margin-left: auto;
+    text-align: -webkit-center;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}

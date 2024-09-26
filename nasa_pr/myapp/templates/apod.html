@@ -3,25 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Astronomy Picture of the Day</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="../static/basecod.css">
 </head>
 <body>
-    <h1>Astronomy Picture of the Day</h1>
-    <form method="get" action="{% url 'apod' %}">
-        <label for="date">Select Date:</label>
-        <input type="date" id="date" name="date">
-        <button type="submit">Get Picture</button>
-    </form>
-
-    {% if error %}
-        <p>Error: {{ error }}</p>
-    {% elif apod_data %}
-        <h2>{{ apod_data.title }}</h2>
-        <p>{{ apod_data.date }}</p>
-        <img src="{{ apod_data.url }}" alt="{{ apod_data.title }}">
-        <p>{{ apod_data.explanation }}</p>
-    {% else %}
-        <p>No data available.</p>
-    {% endif %}
-
+    <div class="body">
+        <h1>Astronomy Picture of the Day</h1>
+        <form method="get" action="{% url 'apod' %}">
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" name="date">
+            <button type="submit">Get Picture</button>
+        </form>
+    
+        {% if error %}
+            <p>Error: {{ error }}</p>
+        {% elif apod_data %}
+            <h2>{{ apod_data.title }}</h2>
+            <p>Date: {{ apod_data.date }}</p>
+            <p>Image URL: {{ apod_data.url }}</p>
+            <img src="{{ apod_data.url }}" alt="{{ apod_data.title }}">
+            <p>{{ apod_data.explanation }}</p>
+        {% else %}
+            <p>No data available.</p>
+        {% endif %}
+    
+    </div>
 </body>
 </html>
